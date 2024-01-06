@@ -9,7 +9,6 @@ namespace Actions {
         element.style.width = `${steps}ch`;
         element.style.whiteSpace = "nowrap";
         element.style.borderRight = "4px solid";
-        element.style.display = "inline-block";
         element.style.animation = `typing ${duration}s steps(${steps}) blink 0.5s infinite step-end alternate`;
       }
     }

@@ -1,11 +1,15 @@
 var Actions;
 (function (Actions) {
     class Animations {
+        static Animate(element, duration, steps) { }
+        ;
     }
     Actions.Animations = Animations;
     class Typing extends Animations {
-        Animate(element) {
-            //--
+        static Animate(element, duration, steps) {
+            element.style.width = `${steps}ch`;
+            element.style.animation = `typing ${duration}s steps(${steps}) blink 0.5s infinite step-end alternate`;
+            console.log(element, duration, steps);
         }
     }
     Actions.Typing = Typing;
@@ -20,9 +24,10 @@ prefix = "creative-typing-";
 const a_typing = document.querySelectorAll(`[class^="${prefix}"]`);
 a_typing.forEach(e => {
     const classElement = e.className.split(' ');
-    const filteredClasses = classElement.filter(c => c.startsWith(prefix));
-    filteredClasses.forEach(c => {
-        const duration = c.replace(prefix, '');
-        console.log(duration);
+    const filter = classElement.filter(c => c.startsWith(prefix));
+    filter.forEach(c => {
+        const duration = parseFloat(c.replace(prefix, ''));
+        const steps = e.textContent.length;
+        Actions.Typing.Animate(e, duration, steps);
     });
 });

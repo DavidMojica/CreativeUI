@@ -5,11 +5,11 @@ var Actions;
     }
     class Typing extends Animations {
         static Animate(element, duration, steps) {
-            element.style.width = `${steps}ch`;
+            element.style.animation = `typing ${duration}s steps(${steps}), blink 0.5s infinite step-end alternate`;
+            element.style.width = `${steps + 1}ch`;
             element.style.whiteSpace = "nowrap";
             element.style.borderRight = "4px solid";
-            element.style.display = "inline-block";
-            element.style.animation = `typing ${duration}s steps(${steps}) blink 0.5s infinite step-end alternate`;
+            element.style.overflow = "hidden";
         }
     }
     Actions.Typing = Typing;

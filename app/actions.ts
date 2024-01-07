@@ -2,7 +2,7 @@ namespace Actions {
     abstract class Animations {
       //Every animation needs 2 things to work. The element where it will be located and its duration.
       //I have decied to use static classes to avoid the creation of multiple and unnecessary instances
-      protected static Animate(element: HTMLElement, duration: number, steps: any): void {}
+      protected static Animate(element: HTMLElement, duration: number | string, steps: any): void {}
     }
   
     //Typing machine efect
@@ -16,7 +16,12 @@ namespace Actions {
       }
 
       public static Play(element:HTMLElement, duration: number | string, steps: number): void{
-        
+        if(isNaN(Number(duration))){
+          if (duration == "i") this.Animate(element, "infinite", steps);
+          else throw new ParameterDurationError;
+        }else{
+
+        }
       }
     }
   }

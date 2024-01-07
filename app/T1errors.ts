@@ -18,7 +18,8 @@ export namespace Errors{
          * @author D. Mojica
          */
         constructor(element: HTMLElement | null, c:string="") {
-            super(`Invalid duration. On ${element.outerHTML} the class ${c} expects a number to determine the duration in seconds or 'i' to set it to infinite mode if the animation has infinite mode.`);
+            const elementHTML = element ? element.outerHTML: "undefined or null"
+            super(`Invalid duration. On ${elementHTML} the class ${c} expects a number to determine the duration in seconds or 'i' to set it to infinite mode if the animation has infinite mode.`);
             this.name = 'ParameterDurationError';
         }
     }
@@ -41,7 +42,8 @@ export namespace Errors{
          * @author D. Mojica
          */
         constructor(element: HTMLElement | null, c:string="") {
-            super(`The animation ${c} does not support infinite mode. Element -> ${element.outerHTML}`);
+            const elementHTML = element ? element.outerHTML: "undefined or null"
+            super(`The animation ${c} does not support infinite mode. Element -> ${elementHTML}`);
             this.name = 'ParameterDurationError';
         }
     }

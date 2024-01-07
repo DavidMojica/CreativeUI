@@ -16,6 +16,7 @@ export namespace Actions {
    * @author D. Mojica
    */
   export class Typing extends Animations {
+    static HTMLClassName:string = 'ca-typing';
     /**
      * Animates a typing effect on an HTML element.
      *
@@ -54,11 +55,11 @@ export namespace Actions {
      */
     public static Play (element: HTMLElement, duration: number | string, steps: number): void {
       switch (true) {
-        case duration === 'i': throw new E.AnimationHasNotInfiniteError(element, 'creative-typing')
+        case duration === 'i': throw new E.AnimationHasNotInfiniteError(element, this.HTMLClassName)
         case !isNaN(Number(duration)):
           this.Animate(element, `${duration}s`, steps)
           break
-        default: throw new E.ParameterDurationError(element, 'creative-typing-')
+        default: throw new E.ParameterDurationError(element, this.HTMLClassName)
       }
     }
   }

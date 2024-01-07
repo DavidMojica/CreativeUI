@@ -1,11 +1,30 @@
+class ParameterDurationError extends Error {
+    constructor(element, c = "") {
+        super(`Invalid duration. On ${element.outerHTML} the class ${c} expects a number to determine the duration in seconds or 'i' to set it to infinite mode if the animation has infinite mode.`);
+        this.name = 'ParameterDurationError';
+    }
+}
+class AnimationHasNotInfiniteError extends Error {
+    constructor(element, c = "") {
+        super(`The animation ${c} does not support infinite mode. Element -> ${element.outerHTML}`);
+        this.name = 'ParameterDurationError';
+    }
+}
 var Actions;
 (function (Actions) {
+    /**
+     * Abstract class to setup & deploy animations.
+     * This class can not be implemented directly, the main objective is deploy it throuhg the childs classes.
+     */
     class Animations {
-        // Every animation needs 2 things to work. The element where it will be located and its duration.
-        // I have decided to use static classes to avoid the creation of multiple and unnecessary instances
-        static Animate(element, duration, steps) {
-            console.log("polymorph non-readed");
-        }
+        /**
+         * This method renderizes
+         * @param element
+         * @param duration
+         * @param steps
+         */
+        static Animate(element, duration, steps) { }
+        ;
     }
     // Typing machine effect
     class Typing extends Animations {
@@ -24,27 +43,24 @@ var Actions;
          * @param {number} steps
          * @returns {void}
          * @author MojiDIos
-         * @class {static}
+         * @class
+         * @access Protected
          * @example --
          */
         static Play(element, duration, steps) {
-            if (isNaN(Number(duration)) || duration === "i") {
-                if (duration == "i") {
-                    this.Animate(element, "3s", steps);
-                }
-                else {
-                    throw new ParameterDurationError(element, "creative-typing-");
-                }
-            }
-            else {
-                this.Animate(element, `${duration}s`, steps);
+            switch (true) {
+                case duration === "i": throw new AnimationHasNotInfiniteError(element, "creative-typing");
+                case !isNaN(Number(duration)):
+                    this.Animate(element, `${duration}s`, steps);
+                    break;
+                default: throw new ParameterDurationError(element, "creative-typing-");
             }
         }
     }
     Actions.Typing = Typing;
 })(Actions || (Actions = {}));
-///<reference path="components.ts" />
-///<reference path="actions.ts" />
+///<reference path="T2components.ts" />
+///<reference path="T2actions.ts" />
 var prefix;
 //-------------Todo lo que tenga que ver con el DOM de la página---------------//
 prefix = "creative-typing-";
@@ -57,17 +73,6 @@ elementsWithPrefix.forEach(element => {
         const durationStr = className.replace(prefix, '');
         const duration = !isNaN(parseFloat(durationStr)) ? parseFloat(durationStr) : durationStr;
         let steps = ((_a = element.textContent) === null || _a === void 0 ? void 0 : _a.length) || 0;
-        if (duration === "i") {
-            Actions.Typing.Play(element, duration, steps);
-        }
-        else if (!isNaN(Number(duration))) {
-            Actions.Typing.Play(element, duration, steps);
-        }
+        Actions.Typing.Play(element, duration, steps);
     });
 });
-class ParameterDurationError extends Error {
-    constructor(element, c = "") {
-        super(`Invalid duration. On ${element} the class ${c} expects a number to determine the duration in seconds or 'i' to set it to infinite mode.`);
-        this.name = 'ParameterDurationError';
-    }
-}

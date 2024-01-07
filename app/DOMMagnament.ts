@@ -11,13 +11,14 @@ elementsWithPrefix.forEach(element => {
 
     filteredClasses.forEach(className => {
         const durationStr: string = className.replace(prefix, '');
-        const duration: number = parseFloat(durationStr);
+        const duration: number | string = !isNaN(parseFloat(durationStr)) ? parseFloat(durationStr) : durationStr;
 
-        if (!isNaN(duration)) {
-            const steps: number = element.textContent?.length || 0;
+        let steps: number = element.textContent?.length || 0;
+        if (duration === "i"){
             Actions.Typing.Play(element, duration, steps);
-        } else {
-            console.error(`La clase ${className} no contiene una duración válida.`);
+        }
+        else if (!isNaN(Number(duration))){
+            Actions.Typing.Play(element, duration, steps);
         }
     });
 });

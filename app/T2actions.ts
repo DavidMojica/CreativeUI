@@ -1,12 +1,7 @@
-import { Errors as E } from "./T1errors"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+///<reference path="T1errors.ts" />
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace Actions {
-  /**
-   * Abstract class to setup & deploy animations.
-   * This class can not be implemented directly, the main objective is deploy it throuhg the childs classes.
-   */
-  abstract class Animations { }
+namespace Animations{
   /**
    * Represents a class for creating a typing machine effect on an HTML element.
    *
@@ -15,7 +10,7 @@ export namespace Actions {
    * @namespace Actions
    * @author D. Mojica
    */
-  export class Typing extends Animations {
+  export class Typing {
     static HTMLClassName:string = 'ca-typing';
     /**
      * Animates a typing effect on an HTML element.
@@ -30,9 +25,8 @@ export namespace Actions {
      * this.Animate(myElement, 3, 10);
      */
     protected static Animate (element: HTMLElement, duration: number | string, steps: number): void {
-      console.log(`typing ${duration} steps(${steps}), blink 0.5s infinite step-end alternate`)
       element.style.animation = `typing ${duration} steps(${steps}), blink 0.5s infinite step-end alternate`
-      element.style.width = `${steps + 1}ch`
+      element.style.width = `${steps}ch`
       element.style.whiteSpace = 'nowrap'
       element.style.borderRight = '4px solid'
       element.style.overflow = 'hidden'
@@ -55,12 +49,17 @@ export namespace Actions {
      */
     public static Play (element: HTMLElement, duration: number | string, steps: number): void {
       switch (true) {
-        case duration === 'i': throw new E.AnimationHasNotInfiniteError(element, this.HTMLClassName)
+        case duration === 'i': throw new Errors.AnimationHasNotInfiniteError(element, this.HTMLClassName)
         case !isNaN(Number(duration)):
           this.Animate(element, `${duration}s`, steps)
           break
-        default: throw new E.ParameterDurationError(element, this.HTMLClassName)
+        default: throw new Errors.ParameterDurationError(element, this.HTMLClassName)
       }
     }
   }
 }
+
+
+
+
+

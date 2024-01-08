@@ -46,5 +46,14 @@ namespace Errors {
            this.name = 'ParameterDurationError';
        }
     }
+
+
+    export class ColorAssignmentError extends Error {
+        constructor(element: HTMLElement | null, c:string=""){
+            const elementHTML = element ? element.outerHTML: "undefined or null"
+            super(`The element ${elementHTML} has a incorrect color assignment pettern. This pettern must be a literal of 3 or 6 characters in hexadecimal or 'd' to set the default color.`)
+            this.name = 'ColorAssignmentError'
+        }
+    }
 }
 

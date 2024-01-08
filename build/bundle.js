@@ -48,6 +48,14 @@ var Errors;
         }
     }
     Errors.AnimationHasNotInfiniteError = AnimationHasNotInfiniteError;
+    class ColorAssignmentError extends Error {
+        constructor(element, c = "") {
+            const elementHTML = element ? element.outerHTML : "undefined or null";
+            super(`The element ${elementHTML} has a incorrect color assignment pettern. This pettern must be a literal of 3 or 6 characters in hexadecimal or 'd' to set the default color.`);
+            this.name = 'ColorAssignmentError';
+        }
+    }
+    Errors.ColorAssignmentError = ColorAssignmentError;
 })(Errors || (Errors = {}));
 /* eslint-disable @typescript-eslint/no-unused-vars */
 ///<reference path="T1errors.ts" />
@@ -109,13 +117,49 @@ var Animations;
     Typing.HTMLClassName = 'ca-typing';
     Animations.Typing = Typing;
 })(Animations || (Animations = {}));
+///<reference path="T1errors.ts" />
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+var Buttons;
+(function (Buttons) {
+    class Neon {
+        static setUp(element, color) {
+            this.color = color === 'd' ? this.defaultColor : color || this.defaultColor;
+            console.log(this.color);
+            // 
+            if (!(typeof this.color === 'string' && color.length === 6 || color.length === 3 || color == 'd'))
+                throw new Errors.ColorAssignmentError(element, this.HTMLClassName);
+            console.log(this.color);
+            element.style.padding = "10px 20px";
+            element.style.border = "none";
+            element.style.fontSize = "17px";
+            element.style.color = "#fff";
+            element.style.borderRadius = "7px";
+            element.style.letterSpacing = "4px";
+            element.style.fontWeight = "700";
+            element.style.textTransform = "uppercase";
+            element.style.transition = "0.5s";
+            element.style.transitionProperty = "box-shadow";
+            element.style.background = `#${this.color}`;
+            element.style.boxShadow = `0 0 25px #${this.color}`;
+            element.addEventListener('mouseover', () => {
+                element.style.boxShadow = `0 0 5px #${this.color}, 0 0 25px #${this.color}, 0 0 50px #${this.color},0 0 100px #${this.color}`;
+            });
+            element.addEventListener('mouseout', () => {
+                element.style.boxShadow = `0 0 25px #${this.color}`;
+            });
+        }
+    }
+    Neon.HTMLClassName = 'cb-neon';
+    Neon.defaultColor = '008CFF';
+    Buttons.Neon = Neon;
+})(Buttons || (Buttons = {}));
 ///<reference path="T2actions.ts" />
+///<reference path="T2elements.ts" />
 // -------------Todo lo que tenga que ver con el DOM de la página---------------//
 let prefix;
 //ca-typing-
 prefix = 'ca-typing-';
-prefix = 'ca-typing-';
-const elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
+let elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
 elementsWithPrefix.forEach(element => {
     const classesArray = element.className.split(' ');
     const filteredClasses = classesArray.filter(className => className.startsWith(prefix));
@@ -124,7 +168,18 @@ elementsWithPrefix.forEach(element => {
         const durationStr = className.replace(prefix, '');
         const duration = !isNaN(parseFloat(durationStr)) ? parseFloat(durationStr) : durationStr;
         const steps = ((_a = element.textContent) === null || _a === void 0 ? void 0 : _a.length) || 0;
-        console.log(steps);
         Animations.Typing.Play(element, duration, steps);
+    });
+});
+//------BUTTONS-----//
+prefix = 'cb-neon-';
+elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
+elementsWithPrefix.forEach(element => {
+    const classesArray = element.className.split(' ');
+    const filteredClasses = classesArray.filter(className => className.startsWith(prefix));
+    filteredClasses.forEach(className => {
+        const color = className.replace(prefix, '');
+        console.log(color);
+        Buttons.Neon.setUp(element, color);
     });
 });

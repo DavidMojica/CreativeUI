@@ -32,6 +32,14 @@ processElements(prefix, (element, durationStr) => {
   Animations.Typing.Play(element, duration, steps);
 });
 
+// Anim beat
+prefix = 'ca-beat-';
+processElements(prefix, (element, interval) => {
+  console.log(element)
+  const intervalStr:number | string = !isNaN(parseFloat(interval)) ? parseFloat(interval) : interval
+  Animations.Beat.Play(element, intervalStr)
+})
+
 // Btn Neon
 prefix = 'cb-neon-';
 processElements(prefix, (element, color) => {

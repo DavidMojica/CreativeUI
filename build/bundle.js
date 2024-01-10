@@ -24,6 +24,13 @@ var Errors;
         }
     }
     Errors.ParameterDurationError = ParameterDurationError;
+    class NullDurationError extends Error {
+        constructor(element, c = "") {
+            super(`Duration or interval on element ${element ? element.outerHTML : "undefined or null"} is 0 or null. The class ${c} does not support it. Please set a correct duration | interval.`);
+            this.name = 'ParameterDurationError';
+        }
+    }
+    Errors.NullDurationError = NullDurationError;
     /**
     * Error thrown when an animation does not support infinite mode.
     *
@@ -32,7 +39,7 @@ var Errors;
     * @namespace Errors
     * @author D. Mojica
     */
-    class AnimationHasNotInfiniteError extends Error {
+    class AnimationHasNoInfiniteError extends Error {
         /**
          * Creates a new instance of AnimationHasNotInfiniteError.
          *
@@ -47,7 +54,7 @@ var Errors;
             this.name = 'ParameterDurationError';
         }
     }
-    Errors.AnimationHasNotInfiniteError = AnimationHasNotInfiniteError;
+    Errors.AnimationHasNoInfiniteError = AnimationHasNoInfiniteError;
     /**
     * Error thrown when an invalid color pattern is provided.
     *
@@ -114,8 +121,10 @@ var Animations;
          */
         static Play(element, duration, steps) {
             switch (true) {
-                case duration === 'i': throw new Errors.AnimationHasNotInfiniteError(element, this.HTMLClassName);
+                case duration === 'i': throw new Errors.AnimationHasNoInfiniteError(element, this.HTMLClassName);
                 case !isNaN(Number(duration)):
+                    if (duration === 0 || duration === '0')
+                        throw new Errors.NullDurationError(element, this.HTMLClassName);
                     this.Animate(element, `${duration}s`, steps);
                     break;
                 default: throw new Errors.ParameterDurationError(element, this.HTMLClassName);
@@ -124,6 +133,25 @@ var Animations;
     }
     Typing.HTMLClassName = 'ca-typing';
     Animations.Typing = Typing;
+    class Beat {
+        static Animate(element, interval) {
+            element.style.position = 'absolute';
+            element.style.animation = `beat ${interval} infinite`;
+        }
+        static Play(element, interval) {
+            switch (true) {
+                case interval === 'i': throw new Errors.AnimationHasNoInfiniteError(element, this.HTMLClassName);
+                case !isNaN(Number(interval)):
+                    if (interval === 0 || interval === '0')
+                        throw new Errors.NullDurationError(element, this.HTMLClassName);
+                    this.Animate(element, `${interval}s`);
+                    break;
+                default: throw new Errors.ParameterDurationError(element, this.HTMLClassName);
+            }
+        }
+    }
+    Beat.HTMLClassName = 'ca-beat';
+    Animations.Beat = Beat;
 })(Animations || (Animations = {}));
 ///<reference path="T1errors.ts" />
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,30 +189,44 @@ var Buttons;
 ///<reference path="T2actions.ts" />
 ///<reference path="T2elements.ts" />
 // -------------Todo lo que tenga que ver con el DOM de la página---------------//
+//------------Functions
 let prefix;
-//ca-typing-
+/**
+ * Process elements with a specified prefix in their class names and apply a callback function to each matching element.
+ *
+ * @param {string} prefix - The prefix to search for in the class names of the elements.
+ * @param {function} callback - A callback function to apply to each matching element, receiving the element and the extracted value as parameters.
+ * @returns {void}
+ */
+function processElements(prefix, callback) {
+    const elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
+    elementsWithPrefix.forEach(element => {
+        const classesArray = element.className.split(' ');
+        const filteredClasses = classesArray.filter(className => className.startsWith(prefix));
+        filteredClasses.forEach(className => {
+            const value = className.replace(prefix, '');
+            callback(element, value);
+        });
+    });
+}
+// Anim typing
 prefix = 'ca-typing-';
-let elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
-elementsWithPrefix.forEach(element => {
-    const classesArray = element.className.split(' ');
-    const filteredClasses = classesArray.filter(className => className.startsWith(prefix));
-    filteredClasses.forEach(className => {
-        var _a;
-        const durationStr = className.replace(prefix, '');
-        const duration = !isNaN(parseFloat(durationStr)) ? parseFloat(durationStr) : durationStr;
-        const steps = ((_a = element.textContent) === null || _a === void 0 ? void 0 : _a.length) || 0;
-        Animations.Typing.Play(element, duration, steps);
-    });
+processElements(prefix, (element, durationStr) => {
+    var _a;
+    const duration = !isNaN(parseFloat(durationStr)) ? parseFloat(durationStr) : durationStr;
+    const steps = ((_a = element.textContent) === null || _a === void 0 ? void 0 : _a.length) || 0;
+    Animations.Typing.Play(element, duration, steps);
 });
-//------BUTTONS-----//
+// Anim beat
+prefix = 'ca-beat-';
+processElements(prefix, (element, interval) => {
+    console.log(element);
+    const intervalStr = !isNaN(parseFloat(interval)) ? parseFloat(interval) : interval;
+    Animations.Beat.Play(element, intervalStr);
+});
+// Btn Neon
 prefix = 'cb-neon-';
-elementsWithPrefix = document.querySelectorAll(`[class^="${prefix}"]`);
-elementsWithPrefix.forEach(element => {
-    const classesArray = element.className.split(' ');
-    const filteredClasses = classesArray.filter(className => className.startsWith(prefix));
-    filteredClasses.forEach(className => {
-        const color = className.replace(prefix, '');
-        console.log(color);
-        Buttons.Neon.setUp(element, color);
-    });
+processElements(prefix, (element, color) => {
+    console.log(color);
+    Buttons.Neon.setUp(element, color);
 });

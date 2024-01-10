@@ -11,7 +11,7 @@ namespace Animations{
    * @author D. Mojica
    */
   export class Typing {
-    static HTMLClassName:string = 'ca-typing';
+    static HTMLClassName:string = 'ca-typing'
     /**
      * Animates a typing effect on an HTML element.
      *
@@ -24,7 +24,7 @@ namespace Animations{
      * // Example usage:
      * this.Animate(myElement, 3, 10);
      */
-    protected static Animate (element: HTMLElement, duration: number | string, steps: number): void {
+    protected static Animate (element: HTMLElement, duration: string, steps: number): void {
       element.style.animation = `typing ${duration} steps(${steps}), blink 0.5s infinite step-end alternate`
       element.style.width = `${steps}ch`
       element.style.whiteSpace = 'nowrap'
@@ -49,11 +49,32 @@ namespace Animations{
      */
     public static Play (element: HTMLElement, duration: number | string, steps: number): void {
       switch (true) {
-        case duration === 'i': throw new Errors.AnimationHasNotInfiniteError(element, this.HTMLClassName)
+        case duration === 'i': throw new Errors.AnimationHasNoInfiniteError(element, this.HTMLClassName)
         case !isNaN(Number(duration)):
+          if (duration === 0 || duration === '0') throw new Errors.NullDurationError(element, this.HTMLClassName)
           this.Animate(element, `${duration}s`, steps)
           break
         default: throw new Errors.ParameterDurationError(element, this.HTMLClassName)
+      }
+    }
+  }
+
+  export class Beat {
+    static HTMLClassName:string = 'ca-beat'
+    protected static Animate (element: HTMLElement, interval: string): void {
+      element.style.position = 'absolute'
+      element.style.animation = `beat ${interval} infinite`
+    }
+
+    public static Play (element: HTMLElement, interval: number | string): void {
+      switch (true) {
+        case interval === 'i': throw new Errors.AnimationHasNoInfiniteError(element, this.HTMLClassName)
+        case !isNaN(Number(interval)):
+          if (interval === 0 || interval === '0') throw new Errors.NullDurationError(element, this.HTMLClassName)
+          this.Animate(element, `${interval}s`)
+          break
+        default: throw new Errors.ParameterDurationError(element, this.HTMLClassName)
+        
       }
     }
   }

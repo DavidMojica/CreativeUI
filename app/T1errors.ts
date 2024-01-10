@@ -23,6 +23,13 @@ namespace Errors {
        }
     }
     
+    export class NullDurationError extends Error {
+        constructor(element: HTMLElement | null, c:string="") {
+            super(`Duration or interval on element ${element ? element.outerHTML: "undefined or null"} is 0 or null. The class ${c} does not support it. Please set a correct duration | interval.`);
+            this.name = 'ParameterDurationError';
+        }
+    }
+
     /**
     * Error thrown when an animation does not support infinite mode.
     *
@@ -31,7 +38,7 @@ namespace Errors {
     * @namespace Errors
     * @author D. Mojica
     */
-    export class AnimationHasNotInfiniteError extends Error {
+    export class AnimationHasNoInfiniteError extends Error {
        /**
         * Creates a new instance of AnimationHasNotInfiniteError.
         *

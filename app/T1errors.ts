@@ -47,11 +47,18 @@ namespace Errors {
        }
     }
 
-
+    /**
+    * Error thrown when an invalid color pattern is provided.
+    * 
+    * @class
+    * @extends Error
+    * @namespace Errors
+    * @author D. Mojica
+     */
     export class ColorAssignmentError extends Error {
         constructor(element: HTMLElement | null, c:string=""){
             const elementHTML = element ? element.outerHTML: "undefined or null"
-            super(`The element ${elementHTML} has a incorrect color assignment pettern. This pettern must be a literal of 3 or 6 characters in hexadecimal or 'd' to set the default color.`)
+            super(`The element ${elementHTML} ${c} has a incorrect color assignment pettern. This pettern must be a literal of 3 or 6 characters or 'd' to set the default color.`)
             this.name = 'ColorAssignmentError'
         }
     }

@@ -10,12 +10,9 @@ namespace Buttons{
         public static setUp(element:HTMLElement, color?:string):void{
             this.color = color === 'd' ? this.defaultColor : color || this.defaultColor;
 
-            console.log(this.color)
-            // 
             if (!(typeof this.color === 'string' &&  color.length === 6 || color.length === 3 || color == 'd'))
                 throw new Errors.ColorAssignmentError(element, this.HTMLClassName)
 
-            console.log(this.color)
             element.style.padding = "10px 20px"
             element.style.border = "none"
             element.style.fontSize = "17px"

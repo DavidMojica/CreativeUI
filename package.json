@@ -21,7 +21,9 @@
     "url": "https://github.com/DavidMojicaDev/CreativeJS/issues"
   },
   "homepage": "https://github.com/DavidMojicaDev/CreativeJS#readme",
-  "dependencies": {},
+  "dependencies": {
+    "sass": "^1.69.7"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",
@@ -30,6 +32,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.1",
     "eslint-plugin-promise": "^6.1.1",
+    "ts-loader": "^9.5.1",
     "typescript": "^5.3.3"
   }
 }
